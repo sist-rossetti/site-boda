@@ -5,15 +5,19 @@ export default function LoginModal({ onClose }) {
   const { login } = useWedding()
   const [pass, setPass] = useState('')
   const [error, setError] = useState(false)
+  const [errorDetail, setErrorDetail] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function attempt() {
     if (busy) return
     setBusy(true)
-    const ok = await login(pass)
+    const { ok, message } = await login(pass)
     setBusy(false)
-    if (ok) { setPass(''); setError(false); onClose() }
-    else setError(true)
+    if (ok) { setPass(''); setError(false); setErrorDetail(''); onClose() }
+    else {
+      setError(true)
+      setErrorDetail(message && !/invalid login credentials/i.test(message) ? message : '')
+    }
   }
 
   return (
@@ -30,7 +34,11 @@ export default function LoginModal({ onClose }) {
           placeholder="Contraseña"
           style={{ width: '100%', marginTop: 26, border: 0, borderBottom: '1px solid rgba(59,48,43,.2)', background: 'none', padding: '12px 0', fontFamily: 'Jost, sans-serif', fontSize: 16, color: '#3b302b', outline: 'none' }}
         />
-        {error && <p style={{ margin: '10px 0 0', fontSize: 12, color: '#a34450' }}>Contraseña incorrecta.</p>}
+        {error && (
+          <p style={{ margin: '10px 0 0', fontSize: 12, color: '#a34450' }}>
+            {errorDetail ? `No se pudo iniciar sesión: ${errorDetail}` : 'Contraseña incorrecta.'}
+          </p>
+        )}
         <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
           <button onClick={attempt} disabled={busy} style={{ flex: 1, border: 0, background: '#6b7355', color: '#f8f2e2', fontFamily: 'Jost, sans-serif', fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', padding: 16, borderRadius: 99, cursor: 'pointer' }}>Entrar</button>
           <button onClick={onClose} style={{ border: '1px solid rgba(59,48,43,.2)', background: 'none', color: '#7a655d', fontFamily: 'Jost, sans-serif', fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', padding: '16px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap' }}>Cancelar</button>

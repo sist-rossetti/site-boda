@@ -64,8 +64,8 @@ export function WeddingProvider({ children }) {
   }, [setSlotImage])
 
   const login = useCallback(async (password) => {
-    const { ok } = await loginAdmin(password)
-    return ok
+    const { ok, error } = await loginAdmin(password)
+    return { ok, message: error ? error.message : null }
   }, [])
 
   const logout = useCallback(async () => {

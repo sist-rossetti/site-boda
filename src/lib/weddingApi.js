@@ -6,7 +6,8 @@ const ADMIN_EMAIL = env.WEDDING_ADMIN_EMAIL
 
 export async function loginAdmin(password) {
   const { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password })
-  return { ok: !error }
+  if (error) console.error('Error al iniciar sesión como administrador:', error.message)
+  return { ok: !error, error }
 }
 
 export async function logoutAdmin() {
