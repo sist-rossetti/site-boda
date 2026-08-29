@@ -5,7 +5,7 @@ import { useWedding } from '../hooks/useWedding'
 import LoginModal from './components/LoginModal'
 import CardEditModal from './components/CardEditModal'
 import Lightbox from './components/Lightbox'
-import { env, getMissingEnvVars, isValidSupabaseUrl } from '../lib/env'
+import { env, getMissingEnvVars, getSuspiciousEnvVars, isValidSupabaseUrl } from '../lib/env'
 import './wedding.css'
 
 function ConfigError({ children }) {
@@ -163,6 +163,19 @@ export default function WeddingLayout() {
         </p>
         <p style={{ fontSize: 12, color: '#a08d85', margin: 0, maxWidth: 480 }}>
           Debe ser solo la URL base del proyecto, algo como <code>https://xxxxxxxx.supabase.co</code> — sin <code>/rest/v1</code> ni nada después, eso lo agrega el código solo.
+        </p>
+      </ConfigError>
+    )
+  }
+  const suspicious = getSuspiciousEnvVars()
+  if (suspicious.length) {
+    return (
+      <ConfigError>
+        <p style={{ fontSize: 13, color: '#8a7167', margin: 0, maxWidth: 480 }}>
+          Esta variable tiene un caracter raro (invisible o "curvo") que no debería estar ahí: <b>{suspicious.join(', ')}</b>.
+        </p>
+        <p style={{ fontSize: 12, color: '#a08d85', margin: 0, maxWidth: 480 }}>
+          Pasa seguido al copiar y pegar en Windows (una comilla se convierte en otro caracter parecido pero distinto). Abrí el <code>.env</code> con el Bloc de notas, borrá esa línea entera y volvé a escribirla a mano o pegala desde una fuente de texto plano, sin comillas alrededor del valor.
         </p>
       </ConfigError>
     )
