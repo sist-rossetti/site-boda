@@ -44,13 +44,13 @@
 .wedding-notesgrid { columns: 4; column-gap: 16px; }
 .wedding-nav-burger { display: none; }
 
-/* La portada mantiene siempre la proporcion de la foto recomendada
-   (2400x1600 = 3:2), en vez de depender de la altura de pantalla de
-   cada dispositivo. Con 100vh, en monitores anchos el contenedor
-   quedaba mucho mas ancho que cualquier foto normal, y para cubrirlo
-   la foto se recortaba/ampliaba de mas. Con aspect-ratio la foto
-   entra practicamente sin recorte en cualquier pantalla. */
-.wedding-hero { width: 100%; height: auto; aspect-ratio: 3/2; min-height: 420px; }
+/* La portada apunta a la proporcion de la foto recomendada (2400x1600
+   = 3:2) para recortar lo menos posible, pero sin pasarse de la
+   altura de pantalla (max-height: 100vh) para que siempre se vea
+   completa sin necesidad de scroll. Cuando el recorte es inevitable
+   (monitores muy anchos), el modo administrador puede arrastrar la
+   foto para elegir que parte se ve (ver PhotoSlot). */
+.wedding-hero { width: 100%; height: auto; aspect-ratio: 3/2; min-height: 420px; max-height: 100vh; }
 
 @media (max-width: 760px) {
   .wedding-notesgrid { columns: 1; }

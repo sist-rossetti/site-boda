@@ -58,6 +58,10 @@ export function WeddingProvider({ children }) {
     patchContent((prev) => ({ ...prev, images: { ...prev.images, [key]: url } }))
   }, [patchContent])
 
+  const setImagePosition = useCallback((key, pos) => {
+    patchContent((prev) => ({ ...prev, imagePositions: { ...prev.imagePositions, [key]: pos } }))
+  }, [patchContent])
+
   const replaceSlot = useCallback(async (key, file) => {
     const url = await uploadSlotImage(file)
     setSlotImage(key, url)
@@ -100,7 +104,7 @@ export function WeddingProvider({ children }) {
   const value = {
     content, photos, notes, admin, loading, loadError,
     lightbox, setLightbox, formOpen, setFormOpen,
-    patchContent, setSlotImage, replaceSlot,
+    patchContent, setSlotImage, replaceSlot, setImagePosition,
     login, logout,
     addPhotos, replacePhoto: doReplacePhoto, removePhoto: doRemovePhoto,
     addNote: doAddNote, removeNote: doRemoveNote,
