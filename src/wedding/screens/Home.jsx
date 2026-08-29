@@ -26,7 +26,7 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg,#e9dcd6 0 14px,#e1d1ca 14px 28px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: '96px 30px 0' }}>
           <PhotoSlot slotKey="cover" label="foto de portada · 2400×1600" replaceStyle={{ position: 'absolute', top: 88, left: 30, zIndex: 5 }} />
         </div>
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '46%', background: 'linear-gradient(to bottom,rgba(250,240,240,0) 0%,rgba(250,236,236,.55) 45%,rgba(249,231,232,.92) 78%,#faf6f3 100%)' }} />
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '28%', background: 'linear-gradient(to bottom,rgba(250,240,240,0) 0%,rgba(250,236,236,.55) 55%,rgba(249,231,232,.92) 82%,#faf6f3 100%)' }} />
         <div style={{ position: 'relative', width: '100%', maxWidth: 1100, margin: '0 auto', textAlign: 'center', padding: '0 24px' }}>
           <EditableText
             as="p"
