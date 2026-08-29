@@ -27,7 +27,7 @@ function NavLink({ to, onNavigate, children }) {
 }
 
 function WeddingChrome() {
-  const { admin, logout, content, patchContent, loading } = useWedding()
+  const { admin, logout, content, patchContent, loading, loadError } = useWedding()
   const navigate = useNavigate()
   const location = useLocation()
   const [loginOpen, setLoginOpen] = useState(false)
@@ -46,6 +46,16 @@ function WeddingChrome() {
     } else {
       patchContent((prev) => ({ ...prev, homeTiles: [...prev.homeTiles, { id: 'ht' + Date.now() }] }))
     }
+  }
+
+  if (loadError) {
+    return (
+      <div className="wedding-app" style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 24, textAlign: 'center', fontFamily: 'Jost, sans-serif' }}>
+        <p style={{ fontSize: 13, letterSpacing: '.1em', textTransform: 'uppercase', color: '#a34450', margin: 0 }}>No se pudo cargar el sitio</p>
+        <p style={{ fontSize: 13, color: '#8a7167', margin: 0, maxWidth: 480 }}>{loadError}</p>
+        <p style={{ fontSize: 12, color: '#a08d85', margin: 0, maxWidth: 480 }}>Revisá que las variables de Supabase en <code>.env</code> sean correctas, y que el proyecto de Supabase esté activo.</p>
+      </div>
+    )
   }
 
   if (loading || !content) {

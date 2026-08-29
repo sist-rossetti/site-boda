@@ -13,6 +13,7 @@ export function WeddingProvider({ children }) {
   const [notes, setNotes] = useState([])
   const [admin, setAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [lightbox, setLightbox] = useState(-1)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -25,6 +26,9 @@ export function WeddingProvider({ children }) {
         setContent(c)
         setPhotos(p)
         setNotes(n)
+      } catch (err) {
+        console.error('Error cargando el sitio:', err)
+        if (mounted) setLoadError(err.message || String(err))
       } finally {
         if (mounted) setLoading(false)
       }
@@ -103,7 +107,7 @@ export function WeddingProvider({ children }) {
   }, [])
 
   const value = {
-    content, photos, notes, admin, loading,
+    content, photos, notes, admin, loading, loadError,
     lightbox, setLightbox, formOpen, setFormOpen,
     patchContent, setSlotImage, replaceSlot,
     login, logout,
