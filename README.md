@@ -25,6 +25,14 @@ vencimiento:
 2. Copiá tu **Cloud name** (arriba a la izquierda del dashboard).
 3. Andá a **Settings → Upload → Upload presets → Add upload preset**, poné
    **Signing Mode: Unsigned** y guardalo. Copiá el nombre del preset.
+4. Como el preset queda visible en el código del sitio (cualquiera podría
+   verlo e intentar subir archivos con él), conviene restringirlo — es la
+   recomendación oficial de Cloudinary para presets "Unsigned"
+   ([ver documentación](https://cloudinary.com/documentation/upload_presets)):
+   entrá a editar el preset que creaste y completá:
+   - **Folder**: `site-boda` (así todo queda ordenado y separado)
+   - **Allowed formats**: `jpg,jpeg,png,heic,heif,webp` (solo imágenes)
+   Guardá de nuevo.
 
 ### 2. Supabase
 

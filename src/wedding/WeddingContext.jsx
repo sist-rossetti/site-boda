@@ -40,27 +40,16 @@ export function WeddingProvider({ children }) {
     supabase.auth.getSession().then(({ data }) => setAdmin(!!data.session))
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setAdmin(!!session))
 
-    const photosCh = supabase.channel('wedding_photos_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'wedding_photos' }, () => {
-        fetchPhotos().then(setPhotos)
-      }).subscribe()
-    const notesCh = supabase.channel('wedding_notes_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'wedding_notes' }, () => {
-        fetchNotes().then(setNotes)
-      }).subscribe()
-
     return () => {
       mounted = false
       subscription.unsubscribe()
-      supabase.removeChannel(photosCh)
-      supabase.removeChannel(notesCh)
     }
   }, [])
 
   const patchContent = useCallback((patch) => {
     setContent((prev) => {
       const next = typeof patch === 'function' ? patch(prev) : { ...prev, ...patch }
-      saveSettings(next).catch(() => {})
+      saveSettings(next).catch((err) => alert('No se pudo guardar el cambio: ' + err.message))
       return next
     })
   }, [])

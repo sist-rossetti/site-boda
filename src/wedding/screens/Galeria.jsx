@@ -37,7 +37,7 @@ export default function Galeria() {
               <button onClick={() => adminInputRef.current?.click()} style={{ border: 0, background: '#3b302b', color: '#f6ece7', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Agregar fotos</button>
               <input ref={adminInputRef} type="file" accept="image/*" multiple hidden onChange={(e) => {
                 const files = Array.from(e.target.files || []).slice(0, 15)
-                if (files.length) addPhotos(files, 'Los novios')
+                if (files.length) addPhotos(files, 'Los novios').catch((err) => alert('No se pudieron subir las fotos: ' + err.message))
                 e.target.value = ''
               }} />
             </>
@@ -64,14 +64,14 @@ export default function Galeria() {
               {admin && (
                 <>
                   <button onClick={() => { setReplacingId(p.id); replaceInputRef.current?.click() }} style={{ position: 'absolute', top: 10, right: 44, border: 0, height: 28, padding: '0 11px', borderRadius: 99, background: 'rgba(59,48,43,.85)', color: '#f6ece7', font: '10px/1 Jost, sans-serif', cursor: 'pointer' }}>Reemplazar</button>
-                  <button onClick={() => removePhoto(p.id)} style={{ position: 'absolute', top: 10, right: 10, border: 0, width: 28, height: 28, borderRadius: 99, background: 'rgba(59,48,43,.85)', color: '#f6ece7', font: '14px/1 Jost, sans-serif', cursor: 'pointer' }}>×</button>
+                  <button onClick={() => removePhoto(p.id).catch((err) => alert('No se pudo borrar la foto: ' + err.message))} style={{ position: 'absolute', top: 10, right: 10, border: 0, width: 28, height: 28, borderRadius: 99, background: 'rgba(59,48,43,.85)', color: '#f6ece7', font: '14px/1 Jost, sans-serif', cursor: 'pointer' }}>×</button>
                 </>
               )}
             </figure>
           ))}
           <input ref={replaceInputRef} type="file" accept="image/*" hidden onChange={(e) => {
             const f = e.target.files?.[0]
-            if (f && replacingId) replacePhoto(replacingId, f)
+            if (f && replacingId) replacePhoto(replacingId, f).catch((err) => alert('No se pudo reemplazar la foto: ' + err.message))
             e.target.value = ''
             setReplacingId(null)
           }} />
@@ -85,7 +85,7 @@ export default function Galeria() {
               <p style={{ margin: 0, fontFamily: "'Playfair Display', serif", fontWeight: 400, fontStyle: 'italic', fontSize: 18, lineHeight: 1.55, color: '#f7f4e8' }}>{n.text}</p>
               <p style={{ margin: '18px 0 0', fontSize: 10, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(247,244,232,.75)' }}>{n.author}</p>
               {admin && (
-                <button onClick={() => removeNote(n.id)} style={{ position: 'absolute', top: 10, right: 10, border: 0, width: 24, height: 24, borderRadius: 99, background: 'rgba(58,66,36,.8)', color: '#f7f4e8', font: '13px/1 Jost, sans-serif', cursor: 'pointer' }}>×</button>
+                <button onClick={() => removeNote(n.id).catch((err) => alert('No se pudo borrar la nota: ' + err.message))} style={{ position: 'absolute', top: 10, right: 10, border: 0, width: 24, height: 24, borderRadius: 99, background: 'rgba(58,66,36,.8)', color: '#f7f4e8', font: '13px/1 Jost, sans-serif', cursor: 'pointer' }}>×</button>
               )}
             </div>
           ))}

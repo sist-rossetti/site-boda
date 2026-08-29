@@ -33,7 +33,9 @@ export default function PhotoSlot({ slotKey, label, replaceStyle }) {
             hidden
             onChange={(e) => {
               const f = e.target.files?.[0]
-              if (f) replaceSlot(slotKey, f)
+              if (f) {
+                replaceSlot(slotKey, f).catch((err) => alert('No se pudo subir la foto: ' + err.message))
+              }
               e.target.value = ''
             }}
           />
