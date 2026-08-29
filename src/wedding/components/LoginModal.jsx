@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWedding } from '../../hooks/useWedding'
+import { env } from '../../lib/env'
 
 export default function LoginModal({ onClose }) {
   const { login } = useWedding()
@@ -35,8 +36,10 @@ export default function LoginModal({ onClose }) {
           style={{ width: '100%', marginTop: 26, border: 0, borderBottom: '1px solid rgba(59,48,43,.2)', background: 'none', padding: '12px 0', fontFamily: 'Jost, sans-serif', fontSize: 16, color: '#3b302b', outline: 'none' }}
         />
         {error && (
-          <p style={{ margin: '10px 0 0', fontSize: 12, color: '#a34450' }}>
-            {errorDetail ? `No se pudo iniciar sesión: ${errorDetail}` : 'Contraseña incorrecta.'}
+          <p style={{ margin: '10px 0 0', fontSize: 12, color: '#a34450', lineHeight: 1.6 }}>
+            {errorDetail
+              ? `No se pudo iniciar sesión: ${errorDetail}`
+              : <>Contraseña incorrecta para el usuario <strong>{env.WEDDING_ADMIN_EMAIL || '(sin configurar)'}</strong>. Verificá que este email exista con esa contraseña en Supabase → Authentication → Users.</>}
           </p>
         )}
         <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
