@@ -1,0 +1,58 @@
+.wedding-app {
+  font-family: Jost, system-ui, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  background: #faf6f3;
+  color: #3b302b;
+  -webkit-font-smoothing: antialiased;
+}
+.wedding-app * { box-sizing: border-box; }
+.wedding-app a { color: #b0736f; text-decoration: none; }
+.wedding-app a:hover { color: #8d5652; }
+.wedding-app button { font-family: inherit; }
+
+@keyframes wf-riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes wf-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wf-bloomIn {
+  0%, 14% { transform: scale(0) rotate(-25deg); opacity: 0; }
+  34% { transform: scale(1.12) rotate(0deg); opacity: 1; }
+  78% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(0) rotate(18deg); opacity: 0; }
+}
+@keyframes wf-leafPop {
+  0%, 18% { transform: scale(0); opacity: 0; }
+  38% { transform: scale(1); opacity: .9; }
+  78% { transform: scale(1); opacity: .9; }
+  100% { transform: scale(0); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-bloom-head, .wf-bloom-leaf { animation: none !important; }
+}
+
+.wedding-app [contenteditable="true"] { outline: 1px dashed rgba(176,115,111,.55); outline-offset: 6px; border-radius: 2px; cursor: text; }
+.wedding-app [contenteditable="true"]:focus { outline: 1px solid #b0736f; }
+
+.wedding-fade { animation: wf-fadeIn .5s ease both; }
+.wedding-rise { animation: wf-riseIn .4s ease both; }
+
+.wedding-card:hover { background: #f5ebe6; }
+.wedding-gallery-btn:hover { background: #6b7355; color: #faf6f3; }
+.wedding-back-btn:hover { background: #5c433e; color: #f9eeec; }
+.wedding-fab:hover { background: #565d43; }
+
+.wedding-galgrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.wedding-notesgrid { columns: 4; column-gap: 16px; }
+.wedding-nav-burger { display: none; }
+
+@media (max-width: 760px) {
+  .wedding-notesgrid { columns: 1; }
+  .wedding-galgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .wedding-nav-links { display: none !important; }
+  .wedding-nav-burger { display: flex !important; align-items: center; justify-content: center; }
+  .wedding-twocol, .wedding-twocol-reverse { display: flex !important; align-items: stretch !important; }
+  .wedding-twocol { flex-direction: column; }
+  .wedding-twocol-reverse { flex-direction: column-reverse; }
+  .wedding-twocol-photo { aspect-ratio: 4/5; min-height: 0 !important; }
+  .wedding-phototiles { grid-template-columns: repeat(2, 1fr) !important; }
+  .wedding-cardgrid { grid-template-columns: 1fr !important; }
+}
