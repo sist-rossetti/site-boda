@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <div className="wedding-fade">
-      <header style={{ position: 'relative', height: '100vh', minHeight: 640, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <header className="wedding-hero" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg,#e9dcd6 0 14px,#e1d1ca 14px 28px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', padding: '96px 30px 0' }}>
           <PhotoSlot slotKey="cover" label="foto de portada · 2400×1600" replaceStyle={{ position: 'absolute', top: 88, left: 30, zIndex: 5 }} />
         </div>
