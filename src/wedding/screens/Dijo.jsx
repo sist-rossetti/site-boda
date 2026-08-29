@@ -27,7 +27,7 @@ export default function Dijo() {
         />
       </div>
 
-      <div style={{ maxWidth: 1500, margin: 'clamp(40px,6vw,72px) auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
+      <div style={{ maxWidth: 1100, margin: 'clamp(40px,6vw,72px) auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
         <section className="wedding-twocol" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: 'clamp(420px,46vw,560px)' }}>
           <div className="wedding-twocol-photo" style={{ position: 'relative', background: 'repeating-linear-gradient(135deg,#e9dcd6 0 12px,#e1d1ca 12px 24px)', display: 'flex', alignItems: 'flex-end', padding: 26 }}>
             <PhotoSlot slotKey="dijoPhoto" label="la propuesta · 1200×1500" replaceStyle={{ top: 18, right: 18 }} />
@@ -47,7 +47,7 @@ export default function Dijo() {
         </section>
       </div>
 
-      <section style={{ margin: '0 auto', maxWidth: 840, padding: 'clamp(64px,8vw,120px) clamp(24px,5vw,48px)' }}>
+      <section style={{ margin: '0 auto', maxWidth: 1100, padding: 'clamp(64px,8vw,120px) clamp(24px,5vw,72px)' }}>
         <EditableText
           as="p"
           value={content.dijo.quote}
