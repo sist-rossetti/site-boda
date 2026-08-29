@@ -44,7 +44,13 @@
 .wedding-notesgrid { columns: 4; column-gap: 16px; }
 .wedding-nav-burger { display: none; }
 
-.wedding-hero { height: 100vh; height: 100dvh; min-height: 640px; }
+/* La portada mantiene siempre la proporcion de la foto recomendada
+   (2400x1600 = 3:2), en vez de depender de la altura de pantalla de
+   cada dispositivo. Con 100vh, en monitores anchos el contenedor
+   quedaba mucho mas ancho que cualquier foto normal, y para cubrirlo
+   la foto se recortaba/ampliaba de mas. Con aspect-ratio la foto
+   entra practicamente sin recorte en cualquier pantalla. */
+.wedding-hero { width: 100%; height: auto; aspect-ratio: 3/2; min-height: 420px; }
 
 @media (max-width: 760px) {
   .wedding-notesgrid { columns: 1; }
@@ -57,5 +63,4 @@
   .wedding-twocol-photo { aspect-ratio: 4/5; min-height: 0 !important; }
   .wedding-phototiles { grid-template-columns: repeat(2, 1fr) !important; }
   .wedding-cardgrid { grid-template-columns: 1fr !important; }
-  .wedding-hero { height: auto; aspect-ratio: 1/1; min-height: 0; max-height: none; }
 }
