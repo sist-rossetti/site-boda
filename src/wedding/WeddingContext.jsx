@@ -5,7 +5,7 @@ import {
   loginAdmin, logoutAdmin, uploadSlotImage,
   addGuestPhotos, replacePhoto, removePhoto, addNote, removeNote,
 } from '../lib/weddingApi'
-import { WeddingContext } from './weddingContext'
+import { WeddingContext } from './wedding-context-store'
 
 export function WeddingProvider({ children }) {
   const [content, setContent] = useState(null)
