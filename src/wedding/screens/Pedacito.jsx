@@ -28,8 +28,10 @@ export default function Pedacito() {
           style={{ margin: '0 0 clamp(40px,5vw,72px)', fontFamily: "'Playfair Display', serif", fontWeight: 400, fontSize: 'clamp(36px,5.2vw,76px)', color: '#3b302b' }}
         />
       </div>
-      <div style={{ position: 'relative', height: 'clamp(340px,52vw,660px)', background: 'repeating-linear-gradient(135deg,#e9dcd6 0 14px,#e1d1ca 14px 28px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <PhotoSlot slotKey="pedHero" label="foto grande a sangre · 2400×1200" replaceStyle={{ bottom: 14, left: 14 }} />
+      <div style={{ margin: '0 auto', maxWidth: 1100, padding: '0 clamp(24px,5vw,72px)' }}>
+        <div style={{ position: 'relative', aspectRatio: '16/9', background: 'repeating-linear-gradient(135deg,#e9dcd6 0 14px,#e1d1ca 14px 28px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <PhotoSlot slotKey="pedHero" label="foto grande · 2000×1125" replaceStyle={{ bottom: 12, left: 12 }} />
+        </div>
       </div>
       <div style={{ margin: '0 auto', maxWidth: 1100, padding: 'clamp(56px,7vw,110px) clamp(24px,5vw,72px) 0', display: 'flex', flexDirection: 'column', gap: 'clamp(56px,7vw,104px)' }}>
         {content.pedacito.map((s) => (
