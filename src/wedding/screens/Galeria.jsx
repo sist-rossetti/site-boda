@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useWedding } from '../../hooks/useWedding'
 import GuestForm from '../components/GuestForm'
 import { getThumbUrl, getDownloadUrl } from '../../lib/cloudinary'
+import { downloadPhotosAsZip } from '../../lib/downloadZip'
 
 function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime()
@@ -20,6 +21,19 @@ export default function Galeria() {
   const adminInputRef = useRef(null)
   const replaceInputRef = useRef(null)
   const [replacingId, setReplacingId] = useState(null)
+  const [zipProgress, setZipProgress] = useState(null)
+
+  async function handleDownloadAll() {
+    if (zipProgress) return
+    setZipProgress({ done: 0, total: photos.filter((p) => p.src).length })
+    try {
+      await downloadPhotosAsZip(photos, (done, total) => setZipProgress({ done, total }))
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setZipProgress(null)
+    }
+  }
 
   return (
     <div style={{ paddingTop: 70, minHeight: '100vh' }} className="wedding-fade">
@@ -31,7 +45,9 @@ export default function Galeria() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <button onClick={() => setTab('fotos')} style={{ border: '1px solid rgba(59,48,43,.18)', background: 'none', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap', color: '#3b302b' }}>Fotos · {photos.length}</button>
           <button onClick={() => setTab('notas')} style={{ border: '1px solid rgba(59,48,43,.18)', background: 'none', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap', color: '#6b7355' }}>Notas · {notes.length}</button>
-          <button onClick={() => alert(`Se descargarían ${photos.length} fotos en un .zip`)} style={{ border: '1px solid rgba(59,48,43,.18)', background: 'none', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap', color: '#7a655d' }}>↓ Descargar todo</button>
+          <button onClick={handleDownloadAll} disabled={!!zipProgress} style={{ border: '1px solid rgba(59,48,43,.18)', background: 'none', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: zipProgress ? 'default' : 'pointer', whiteSpace: 'nowrap', color: '#7a655d' }}>
+            {zipProgress ? `Descargando ${zipProgress.done}/${zipProgress.total}…` : '↓ Descargar todo'}
+          </button>
           {admin && (
             <>
               <button onClick={() => adminInputRef.current?.click()} style={{ border: 0, background: '#3b302b', color: '#f6ece7', fontFamily: 'Jost, sans-serif', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 99, cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Agregar fotos</button>

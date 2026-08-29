@@ -3,10 +3,28 @@ import { env } from './env'
 const CLOUD_NAME = env.CLOUDINARY_CLOUD_NAME
 const UPLOAD_PRESET = env.CLOUDINARY_UPLOAD_PRESET
 
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif', 'image/webp']
+const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25 MB, más que suficiente para una foto de celular
+
+// El upload preset es "Unsigned" a propósito (así los invitados suben sin
+// cuenta), pero eso significa que su nombre queda visible en el código del
+// sitio y cualquiera podría intentar usarlo desde afuera. Como esta cuenta
+// de Cloudinary no expone un control de formato/tamaño en el preset,
+// filtramos acá: solo imágenes, con un tamaño razonable.
+function assertValidImage(file) {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error(`"${file.name}" no es una imagen admitida (solo JPG, PNG, HEIC o WEBP).`)
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(`"${file.name}" pesa demasiado (máximo 25 MB por foto).`)
+  }
+}
+
 // Sube el archivo original tal cual, sin comprimir. Cloudinary genera
 // además una miniatura liviana para la grilla (ver getThumbUrl); el
 // original nunca se toca y es el que se descarga.
 export async function uploadImage(file) {
+  assertValidImage(file)
   const form = new FormData()
   form.append('file', file)
   form.append('upload_preset', UPLOAD_PRESET)

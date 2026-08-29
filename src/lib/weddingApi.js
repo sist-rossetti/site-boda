@@ -53,15 +53,34 @@ export async function addGuestPhotos(files, author) {
 }
 
 export async function replacePhoto(id, file) {
+  const { data: old } = await supabase.from('wedding_photos').select('cloudinary_id').eq('id', id).single()
   const { url, publicId } = await uploadImage(file)
   const { error } = await supabase.from('wedding_photos').update({ src: url, cloudinary_id: publicId }).eq('id', id)
   if (error) throw error
+  if (old?.cloudinary_id) {
+    // Best-effort: si esto falla, la foto ya se reemplazó bien en el sitio,
+    // solo queda un archivo viejo sin usar en Cloudinary (no rompe nada).
+    deleteCloudinaryPhoto({ cloudinaryId: old.cloudinary_id }).catch(() => {})
+  }
   return url
 }
 
 export async function removePhoto(id) {
-  const { error } = await supabase.from('wedding_photos').delete().eq('id', id)
+  const { data: row } = await supabase.from('wedding_photos').select('cloudinary_id').eq('id', id).single()
+  if (row?.cloudinary_id) {
+    await deleteCloudinaryPhoto({ photoId: id, cloudinaryId: row.cloudinary_id })
+  } else {
+    const { error } = await supabase.from('wedding_photos').delete().eq('id', id)
+    if (error) throw error
+  }
+}
+
+async function deleteCloudinaryPhoto({ photoId, cloudinaryId }) {
+  const { data, error } = await supabase.functions.invoke('delete-cloudinary-photo', {
+    body: { photoId, cloudinaryId },
+  })
   if (error) throw error
+  if (data?.error) throw new Error(data.error)
 }
 
 export async function addNote(text, author) {

@@ -47,19 +47,44 @@ vencimiento:
 4. Copiá la **Project URL** y la **anon public key** desde
    **Settings → API**.
 
-### 3. Variables de entorno
+### 3. Función para borrar fotos de Cloudinary de verdad
+
+Cuando los novios borran o reemplazan una foto desde el modo administrador,
+además de sacarla del sitio se borra el archivo real en Cloudinary (si no,
+se van acumulando archivos sueltos sin usar). Borrar en Cloudinary necesita
+una clave secreta que nunca puede estar en el navegador, así que esto corre
+como una función en el servidor de Supabase.
+
+1. En Cloudinary, andá a **Settings → Access Keys** (a veces aparece como
+   "API Keys") y copiá tu **API Key** y **API Secret**.
+2. En Supabase, andá a **Edge Functions** → **Deploy a new function**,
+   ponele de nombre `delete-cloudinary-photo`, y pegá el contenido de
+   `supabase/functions/delete-cloudinary-photo/index.ts` de este repo.
+   Desplegala.
+3. En la misma sección de **Edge Functions**, buscá **Manage secrets** (o
+   **Settings → Edge Functions → Secrets**) y agregá estos tres, con tus
+   valores reales:
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
+
+   Estos tres nunca van en el `.env` del sitio ni en ningún lado del
+   código — solo viven en los secrets de la función, del lado del
+   servidor.
+
+### 4. Variables de entorno
 
 Copiá `.env.example` a `.env` y completá los valores de Cloudinary y
 Supabase de los pasos anteriores.
 
-### 4. Instalar y correr
+### 5. Instalar y correr
 
 ```bash
 npm install
 npm run dev
 ```
 
-### 5. Publicar
+### 6. Publicar
 
 Cualquier hosting de sitios estáticos gratis sirve (Netlify, Vercel,
 GitHub Pages). Build de producción:
@@ -78,14 +103,16 @@ en el panel del hosting elegido.
 - `src/lib/cloudinary.js` — subida y URLs de descarga/miniatura de Cloudinary.
 - `src/lib/weddingApi.js` — funciones que combinan ambos (fotos, notas,
   textos editables, login).
+- `src/lib/downloadZip.js` — arma el `.zip` de "Descargar todo" en el propio
+  navegador, sin backend.
 - `supabase/migrations/` — esquema de base de datos.
+- `supabase/functions/delete-cloudinary-photo/` — función que borra el
+  archivo real de Cloudinary al reemplazar o eliminar una foto.
 
 ## Notas
 
-- Borrar una foto desde el modo administrador la saca del sitio, pero no
-  borra el archivo de Cloudinary (borrar ahí requiere una clave secreta que
-  no puede vivir en el navegador). Con el plan gratuito de 25 GB no debería
-  ser un problema para una boda.
-- El botón "Descargar todo" de la Galería es un aviso, no descarga un
-  `.zip` real todavía — armar ese empaquetado queda pendiente si hace
-  falta más adelante.
+- Las fotos que van en las secciones del sitio (portada, bloques, etc. —
+  no las de la Galería de invitados) no borran el archivo viejo de
+  Cloudinary al reemplazarlas, porque no se llevan registro individual de
+  cada una. Son pocas fotos (menos de 20 en total), así que el espacio que
+  ocupan de más es insignificante frente a los 25 GB gratis.
