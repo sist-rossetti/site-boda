@@ -1,7 +1,8 @@
 import { supabase } from './supabase'
 import { uploadImage } from './cloudinary'
+import { env } from './env'
 
-const ADMIN_EMAIL = import.meta.env.VITE_WEDDING_ADMIN_EMAIL
+const ADMIN_EMAIL = env.WEDDING_ADMIN_EMAIL
 
 export async function loginAdmin(password) {
   const { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password })
@@ -13,8 +14,11 @@ export async function logoutAdmin() {
 }
 
 export async function fetchSettings() {
-  const { data, error } = await supabase.from('wedding_settings').select('content').eq('id', 1).single()
+  const { data, error } = await supabase.from('wedding_settings').select('content').eq('id', 1).maybeSingle()
   if (error) throw error
+  if (!data) {
+    throw new Error('No se encontró la configuración del sitio en Supabase (falta la fila con id=1 en wedding_settings). Volvé a correr el SQL de supabase/migrations/0001_wedding_schema.sql en el SQL Editor.')
+  }
   return data.content
 }
 

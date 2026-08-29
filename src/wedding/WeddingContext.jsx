@@ -28,7 +28,9 @@ export function WeddingProvider({ children }) {
         setNotes(n)
       } catch (err) {
         console.error('Error cargando el sitio:', err)
-        if (mounted) setLoadError(err.message || String(err))
+        const clean = (s) => (typeof s === 'string' && !s.includes('\n    at ') ? s : null)
+        const parts = [clean(err?.message), clean(err?.details), clean(err?.hint), err?.code ? `(código ${err.code})` : null].filter(Boolean)
+        if (mounted) setLoadError(parts.length ? parts.join(' — ') : String(err))
       } finally {
         if (mounted) setLoading(false)
       }

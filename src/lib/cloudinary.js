@@ -1,5 +1,7 @@
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+import { env } from './env'
+
+const CLOUD_NAME = env.CLOUDINARY_CLOUD_NAME
+const UPLOAD_PRESET = env.CLOUDINARY_UPLOAD_PRESET
 
 // Sube el archivo original tal cual, sin comprimir. Cloudinary genera
 // además una miniatura liviana para la grilla (ver getThumbUrl); el

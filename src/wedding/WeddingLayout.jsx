@@ -5,7 +5,17 @@ import { useWedding } from '../hooks/useWedding'
 import LoginModal from './components/LoginModal'
 import CardEditModal from './components/CardEditModal'
 import Lightbox from './components/Lightbox'
+import { env, getMissingEnvVars, isValidSupabaseUrl } from '../lib/env'
 import './wedding.css'
+
+function ConfigError({ children }) {
+  return (
+    <div className="wedding-app" style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', justifyContent: 'center', height: '100vh', padding: 24, textAlign: 'center', fontFamily: 'Jost, sans-serif' }}>
+      <p style={{ fontSize: 13, letterSpacing: '.1em', textTransform: 'uppercase', color: '#a34450', margin: 0 }}>Falta configurar el sitio</p>
+      {children}
+    </div>
+  )
+}
 
 const ROUTE_LABELS = {
   '/nuestra-historia': '+ Sección historia',
@@ -132,6 +142,31 @@ function WeddingChrome() {
 }
 
 export default function WeddingLayout() {
+  const missing = getMissingEnvVars()
+  if (missing.length) {
+    return (
+      <ConfigError>
+        <p style={{ fontSize: 13, color: '#8a7167', margin: 0, maxWidth: 480 }}>
+          Faltan estas variables en el archivo <code>.env</code>: <b>{missing.join(', ')}</b>.
+        </p>
+        <p style={{ fontSize: 12, color: '#a08d85', margin: 0, maxWidth: 480 }}>
+          Revisá <code>.env.example</code> para ver el formato, y reiniciá <code>npm run dev</code> después de guardar los cambios (los cambios en <code>.env</code> no se aplican solos).
+        </p>
+      </ConfigError>
+    )
+  }
+  if (!isValidSupabaseUrl(env.SUPABASE_URL)) {
+    return (
+      <ConfigError>
+        <p style={{ fontSize: 13, color: '#8a7167', margin: 0, maxWidth: 480 }}>
+          <code>VITE_SUPABASE_URL</code> no tiene el formato esperado: <b>{env.SUPABASE_URL}</b>
+        </p>
+        <p style={{ fontSize: 12, color: '#a08d85', margin: 0, maxWidth: 480 }}>
+          Debe ser solo la URL base del proyecto, algo como <code>https://xxxxxxxx.supabase.co</code> — sin <code>/rest/v1</code> ni nada después, eso lo agrega el código solo.
+        </p>
+      </ConfigError>
+    )
+  }
   return (
     <WeddingProvider>
       <WeddingChrome />
