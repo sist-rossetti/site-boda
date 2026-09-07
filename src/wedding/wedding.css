@@ -41,6 +41,7 @@
 .wedding-fab:hover { background: #565d43; }
 
 .wedding-galgrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.wedding-secgallery { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 .wedding-notesgrid { columns: 4; column-gap: 16px; }
 .wedding-nav-burger { display: none; }
 
@@ -55,6 +56,7 @@
 @media (max-width: 760px) {
   .wedding-notesgrid { columns: 1; }
   .wedding-galgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .wedding-secgallery { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
   .wedding-nav-links { display: none !important; }
   .wedding-nav-burger { display: flex !important; align-items: center; justify-content: center; }
   .wedding-twocol, .wedding-twocol-reverse { display: flex !important; align-items: stretch !important; }

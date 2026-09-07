@@ -48,9 +48,9 @@ function WeddingChrome() {
 
   function addHere() {
     if (location.pathname === '/nuestra-historia') {
-      patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), kicker: 'Nueva sección', title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' }] }))
+      patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photos: [] }] }))
     } else if (location.pathname === '/un-pedacito') {
-      patchContent((prev) => ({ ...prev, pedacito: [...prev.pedacito, { id: 'p' + Date.now(), kicker: 'Nueva sección', title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' }] }))
+      patchContent((prev) => ({ ...prev, pedacito: [...prev.pedacito, { id: 'p' + Date.now(), title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photos: [] }] }))
     } else if (location.pathname === '/dijo-que-si') {
       patchContent((prev) => ({ ...prev, dijoTiles: [...prev.dijoTiles, { id: 'dt' + Date.now() }] }))
     } else {

@@ -1,7 +1,47 @@
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWedding } from '../../hooks/useWedding'
+import { uploadSlotImage } from '../../lib/weddingApi'
 import PhotoSlot from '../components/PhotoSlot'
 import EditableText from '../components/EditableText'
+
+function SectionGallery({ photos, admin, onAddPhotos, onRemovePhoto }) {
+  const inputRef = useRef(null)
+  return (
+    <div className="wedding-secgallery">
+      {photos.map((p) => (
+        <div key={p.id} style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden', background: 'repeating-linear-gradient(135deg,#ece0da 0 12px,#e4d4cd 12px 24px)' }}>
+          <img src={p.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          {admin && (
+            <button onClick={() => onRemovePhoto(p.id)} style={{ position: 'absolute', top: 6, right: 6, border: 0, width: 24, height: 24, borderRadius: 99, background: 'rgba(59,48,43,.85)', color: '#f6ece7', font: '13px/1 Jost, sans-serif', cursor: 'pointer' }}>×</button>
+          )}
+        </div>
+      ))}
+      {admin && (
+        <>
+          <button
+            onClick={() => inputRef.current?.click()}
+            style={{ aspectRatio: '1', border: '1px dashed rgba(59,48,43,.3)', background: 'none', color: '#8a7167', font: '10px/1 Jost, sans-serif', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}
+          >
+            + Agregar fotos
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            hidden
+            onChange={(e) => {
+              const files = Array.from(e.target.files || [])
+              if (files.length) onAddPhotos(files)
+              e.target.value = ''
+            }}
+          />
+        </>
+      )}
+    </div>
+  )
+}
 
 export default function Historia() {
   const { content, admin, patchContent } = useWedding()
@@ -14,7 +54,25 @@ export default function Historia() {
     patchContent((prev) => ({ ...prev, historia: prev.historia.filter((s) => s.id !== id) }))
   }
   function addSection() {
-    patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), kicker: 'Nueva sección', title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' }] }))
+    patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photos: [] }] }))
+  }
+  function addPhotosToSection(id, files) {
+    Promise.all(files.map((f) => uploadSlotImage(f)))
+      .then((urls) => {
+        patchContent((prev) => ({
+          ...prev,
+          historia: prev.historia.map((s) => (s.id === id
+            ? { ...s, photos: [...(s.photos || []), ...urls.map((url) => ({ id: 'ph' + Date.now() + Math.random().toString(36).slice(2), url }))] }
+            : s)),
+        }))
+      })
+      .catch((err) => alert('No se pudieron subir las fotos: ' + err.message))
+  }
+  function removePhotoFromSection(id, photoId) {
+    patchContent((prev) => ({
+      ...prev,
+      historia: prev.historia.map((s) => (s.id === id ? { ...s, photos: (s.photos || []).filter((p) => p.id !== photoId) } : s)),
+    }))
   }
 
   return (
@@ -35,22 +93,24 @@ export default function Historia() {
       </div>
       <div style={{ margin: '0 auto', maxWidth: 1100, padding: 'clamp(56px,7vw,110px) clamp(24px,5vw,72px) 0', display: 'flex', flexDirection: 'column', gap: 'clamp(64px,8vw,120px)' }}>
         {content.historia.map((s) => (
-          <div key={s.id} className="wedding-twocol wedding-twocol-reverse" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(28px,4vw,64px)', alignItems: 'center' }}>
+          <div key={s.id} style={{ position: 'relative' }}>
             {admin && (
               <button onClick={() => removeSection(s.id)} style={{ position: 'absolute', top: -14, right: 0, zIndex: 6, border: '1px solid rgba(163,68,80,.4)', background: '#faf6f3', color: '#a34450', font: "10px/1 Jost, sans-serif", letterSpacing: '.14em', textTransform: 'uppercase', padding: '8px 13px', borderRadius: 99, cursor: 'pointer' }}>Eliminar sección</button>
             )}
-            <div>
-              <p style={{ margin: '0 0 14px', font: "10px/1 ui-monospace, Menlo, monospace", letterSpacing: '.26em', textTransform: 'uppercase', color: '#b0736f' }}>{s.kicker}</p>
+            <div style={{ maxWidth: 760, margin: '0 auto clamp(32px,4vw,48px)', textAlign: 'center' }}>
               <EditableText as="h3" value={s.title} onSave={(v) => updateSection(s.id, { title: v })} style={{ margin: '0 0 20px', fontFamily: "'Playfair Display', serif", fontWeight: 400, fontSize: 'clamp(27px,3.1vw,42px)', color: '#3b302b' }} />
               <EditableText as="p" value={s.body} onSave={(v) => updateSection(s.id, { body: v })} style={{ margin: 0, fontSize: 15, lineHeight: 1.95, color: '#6d5c55', textWrap: 'pretty' }} />
             </div>
-            <div className="wedding-twocol-photo" style={{ position: 'relative', aspectRatio: '4/5', background: 'repeating-linear-gradient(135deg,#ece0da 0 12px,#e4d4cd 12px 24px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <PhotoSlot slotKey={`hist-${s.id}`} label={s.kicker} replaceStyle={{ bottom: 10, left: 10 }} />
-            </div>
+            <SectionGallery
+              photos={s.photos || []}
+              admin={admin}
+              onAddPhotos={(files) => addPhotosToSection(s.id, files)}
+              onRemovePhoto={(photoId) => removePhotoFromSection(s.id, photoId)}
+            />
           </div>
         ))}
         {admin && (
-          <button onClick={addSection} style={{ border: '1px dashed rgba(59,48,43,.3)', background: 'none', color: '#8a7167', fontFamily: 'Jost, sans-serif', fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase', padding: 32, cursor: 'pointer' }}>+ Agregar sección foto + texto</button>
+          <button onClick={addSection} style={{ border: '1px dashed rgba(59,48,43,.3)', background: 'none', color: '#8a7167', fontFamily: 'Jost, sans-serif', fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase', padding: 32, cursor: 'pointer' }}>+ Agregar sección título + texto + fotos</button>
         )}
       </div>
       <footer style={{ marginTop: 'clamp(72px,9vw,130px)', padding: 'clamp(56px,7vw,96px) 24px', textAlign: 'center', background: 'linear-gradient(to bottom,#faf6f3,#f2d9d8)' }}>
