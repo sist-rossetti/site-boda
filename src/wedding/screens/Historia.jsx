@@ -54,7 +54,7 @@ export default function Historia() {
     patchContent((prev) => ({ ...prev, historia: prev.historia.filter((s) => s.id !== id) }))
   }
   function addSection() {
-    patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photos: [] }] }))
+    patchContent((prev) => ({ ...prev, historia: [...prev.historia, { id: 'h' + Date.now(), kicker: 'Nueva sección', title: 'Título editable', body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photos: [] }] }))
   }
   function addPhotosToSection(id, files) {
     Promise.all(files.map((f) => uploadSlotImage(f)))
@@ -97,7 +97,13 @@ export default function Historia() {
             {admin && (
               <button onClick={() => removeSection(s.id)} style={{ position: 'absolute', top: -14, right: 0, zIndex: 6, border: '1px solid rgba(163,68,80,.4)', background: '#faf6f3', color: '#a34450', font: "10px/1 Jost, sans-serif", letterSpacing: '.14em', textTransform: 'uppercase', padding: '8px 13px', borderRadius: 99, cursor: 'pointer' }}>Eliminar sección</button>
             )}
-            <div style={{ maxWidth: 760, margin: '0 auto clamp(32px,4vw,48px)', textAlign: 'center' }}>
+            <EditableText
+              as="p"
+              value={s.kicker}
+              onSave={(v) => updateSection(s.id, { kicker: v })}
+              style={{ margin: '0 0 14px', textAlign: 'center', font: "10px/1 ui-monospace, Menlo, monospace", letterSpacing: '.26em', textTransform: 'uppercase', color: '#b0736f' }}
+            />
+            <div style={{ maxWidth: 760, margin: '0 0 clamp(32px,4vw,48px)' }}>
               <EditableText as="h3" value={s.title} onSave={(v) => updateSection(s.id, { title: v })} style={{ margin: '0 0 20px', fontFamily: "'Playfair Display', serif", fontWeight: 400, fontSize: 'clamp(27px,3.1vw,42px)', color: '#3b302b' }} />
               <EditableText as="p" value={s.body} onSave={(v) => updateSection(s.id, { body: v })} style={{ margin: 0, fontSize: 15, lineHeight: 1.95, color: '#6d5c55', textWrap: 'pretty' }} />
             </div>
